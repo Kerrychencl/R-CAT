@@ -1,6 +1,6 @@
 # 啟用必要的套件
 library(pacman)
-p_load(parallel, catR, progress, doSNOW)
+p_load(catR, doSNOW, parallel, progress, writexl)
 
 ###---------------------數據生成---------------------
 ## 受試者能力生成
