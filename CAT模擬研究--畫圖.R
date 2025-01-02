@@ -16,7 +16,7 @@ MFII_df_var <- read_excel("unif400_MFII_var.xlsx")
 MFII_df_MSE <- read_excel("unif400_MFII_MSE.xlsx")
 MFII_df_info_mean_est <- read_excel("unif400_MFII_info_mean_est.xlsx")
 MFII_df_info_mean_true <- read_excel("unif400_MFII_info_mean_true.xlsx")
-###----------------------MLWI資料----------------------
+
 # MLWI
 MLWI_df_bias <- read_excel("unif400_MLWI_bias.xlsx")
 MLWI_df_var <- read_excel("unif400_MLWI_var.xlsx")
@@ -206,5 +206,3 @@ for (i in 1:7) {
   # 關閉圖形設備
   dev.off()
   }
-
-legend("topright", legend = c("MFI", "MFII", "MLWI"), col = c("blue", "green", "red"), lty = 1, lwd = 2)
