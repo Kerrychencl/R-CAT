@@ -71,10 +71,10 @@ MFI_est_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄�
 MFI_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄當前的能力估計值
 MFI_ever_used <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄已經選取過的題目
 
-# 紀錄測試時間(使用系統的時間)
+##紀錄測試時間(使用系統的時間)
 start_time_MFI <- Sys.time()  # 紀錄測試時間(使用系統的時間)
 
-# 用foreach換掉for，代表
+# 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
   # 因為np個人是同時進行的，所以原本矩陣nrow是np的，都變為TL長度的向量即可
   ever.used <- numeric(TL)  # 向量，用於紀錄已經選取過的題目
@@ -121,7 +121,7 @@ for (i in 1:np) {
   MFI_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
-# 紀錄作答結束的時間
+## 紀錄作答結束的時間
 end_time_MFI <- Sys.time()
 
 # 計算模擬時間
@@ -134,7 +134,7 @@ hours <- floor((total_seconds %% (24 * 3600)) / 3600)
 minutes <- floor((total_seconds %% 3600) / 60)
 seconds <- round(total_seconds %% 60, 2)  # 可選保留小數
 
-# 動態構建報告字符串
+# 動態紀錄時間
 formatted_time_MFI <- trimws(paste(  # trimws()去除空格
   if (days > 0) sprintf("%d 天", days) else "",
   if (hours > 0) sprintf("%02d 小時", hours) else "",
@@ -174,7 +174,6 @@ row.names(MFI_df_info_mean_true) <- row_name
 colnames(MFI_df_info_mean_true) <- col_name
 
 
-
 ## 計算bias, variance, MSE, info_mean_est and info_mean_true
 for (i in 1:7) {
   for (j in 1:(TL - 4)) {
@@ -185,7 +184,6 @@ for (i in 1:7) {
     MFI_df_info_mean_true[i, j] <- mean(MFI_true_info_table[((i - 1) * R + 1):(i * R), j + 4])  # info_mean_true
   }
 }
-
 
 ## MFI資料輸出
 write_xlsx(MFI_df_bias, "unif400_MFI_bias.xlsx")
@@ -275,7 +273,7 @@ for (i in 1:np) {
   MFII_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
-# 紀錄作答結束的時間
+## 紀錄作答結束的時間
 end_time_MFII <- Sys.time()
 
 # 計算模擬時間
@@ -288,7 +286,7 @@ hours <- floor((total_seconds %% (24 * 3600)) / 3600)
 minutes <- floor((total_seconds %% 3600) / 60)
 seconds <- round(total_seconds %% 60)  # 可選保留小數秒
 
-# 動態構建報告字符串
+# 動態紀錄時間
 formatted_time_MFII <- trimws(paste(  # trimws()去除空格
   if (days > 0) sprintf("%d 天", days) else "",
   if (hours > 0) sprintf("%02d 小時", hours) else "",
@@ -300,7 +298,7 @@ formatted_time_MFII <- trimws(paste(  # trimws()去除空格
 cat("MFII模擬時間：", formatted_time_MFII, "\n")
 
 
-###----------------------MFII_data.frame生成結果----------------------
+###----------------------MFII_data.frame生成結果與輸出----------------------
 ## 數據框的建立
 # 數據框名字建立
 row_name <- c("-3", "-2", "-1", "0", "1", "2", "3")  # 列的名字(即，左側)
@@ -328,7 +326,6 @@ row.names(MFII_df_info_mean_true) <- row_name
 colnames(MFII_df_info_mean_true) <- col_name
 
 
-
 ## 計算bias, variance, MSE, info_mean_est and info_mean_true
 for (i in 1:7) {
   for (j in 1:(TL - 4)) {
@@ -354,7 +351,7 @@ MLWI_est_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄
 MLWI_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄當前的能力估計值
 MLWI_ever_used <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄已經選取過的題目
 
-## # 紀錄測試時間(使用系統的時間)
+## 紀錄測試時間(使用系統的時間)
 start_time_MLWI <- Sys.time()  
 
 # 平行運算
@@ -402,7 +399,7 @@ for (i in 1:np) {
   MLWI_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
-# 紀錄作答結束的時間
+## 紀錄作答結束的時間
 end_time_MLWI <- Sys.time()
 
 # 計算模擬時間
@@ -415,7 +412,7 @@ hours <- floor((total_seconds %% (24 * 3600)) / 3600)
 minutes <- floor((total_seconds %% 3600) / 60)
 seconds <- round(total_seconds %% 60)  # 可選保留小數秒
 
-# 動態構建報告字符串
+# 動態紀錄時間
 formatted_time_MLWI <- trimws(paste(  # trimws()去除空格
   if (days > 0) sprintf("%d 天", days) else "",
   if (hours > 0) sprintf("%02d 小時", hours) else "",
@@ -431,7 +428,7 @@ close(pb)
 stopCluster(cl) 
 
 
-###----------------------MLWI_data.frame生成結果----------------------
+###----------------------MLWI_data.frame生成結果與輸出----------------------
 ## 數據框的建立
 # 數據框名字建立
 row_name <- c("-3", "-2", "-1", "0", "1", "2", "3")  # 列的名字(即，左側)
@@ -519,3 +516,4 @@ for (i in 1:7) {
   lines(5:TL, MFII_df_info_mean_est[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_info_mean_est[i, ], col = "red", lwd = 3)
 }
+  
