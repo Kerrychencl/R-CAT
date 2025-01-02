@@ -4,7 +4,7 @@ p_load(parallel, catR, progress, doSNOW)
 
 ###---------------------數據生成---------------------
 ## 受試者能力生成
-R <- 3  # 將能力值重複R遍
+R <- 1000  # 將能力值重複R遍
 theta.true <- rep(c(-3, -2, -1, 0, 1, 2, 3), each = R)  # theta.true生成
 
 ##參數設定 (受測者數量、題庫和測驗長度)
@@ -12,11 +12,11 @@ theta.true <- rep(c(-3, -2, -1, 0, 1, 2, 3), each = R)  # theta.true生成
 np <- length(theta.true)
 
 # 題庫大小的選擇(ni)(1：400，其他數字：200)
-pool <- 0
+pool <- 1
 if (pool == 1) ni = 400 else ni = 200  # 試題數量(選其中一個題庫)：400 and 200
 
 # 測驗訂定的題數長度(TL)：60
-TL <- 10
+TL <- 60
 
 ## 題庫生成的選擇(1：均勻分布，其他數字：常態分布)
 distribution <- 1
@@ -482,7 +482,7 @@ write_xlsx(MLWI_df_info_mean_true, "unif400_MLWI_info_mean_true.xlsx")
 # 繪製bias # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   plot(5:TL, MFI_df_bias[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "bias",
-       main = paste("ability = ",i-4), xlim = c(1, TL), ylim = c(-1.6, 1.6)) # ylim 自行調整
+       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(-1.6, 1.6)) # ylim 自行調整
   lines(5:TL, MFII_df_bias[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_bias[i, ], col = "red", lwd = 3)
   legend("topright", legend = c("MFI", "MFII", "MLWI"), col = c("blue", "green", "red"), lty = 1, lwd = 2)
@@ -491,7 +491,7 @@ for (i in 1:7) {
 # 繪製var # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   plot(5:TL, MFI_df_var[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "varience",
-       main = paste("ability = ",i-4), xlim = c(1, TL), ylim = c(0, .4)) # ylim 自行調整
+       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .4)) # ylim 自行調整
   lines(5:TL, MFII_df_var[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_var[i, ], col = "red", lwd = 3)
 }
@@ -499,7 +499,7 @@ for (i in 1:7) {
 # 繪製MSE # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   plot(5:TL, MFI_df_MSE[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "MSE",
-       main = paste("ability = ",i-4), xlim = c(1, TL), ylim = c(0, 2)) # ylim 自行調整
+       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, 2)) # ylim 自行調整
   lines(5:TL, MFII_df_MSE[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_MSE[i, ], col = "red", lwd = 3)
 }
@@ -507,7 +507,7 @@ for (i in 1:7) {
 # 繪製 mean_info(基於真實能力) # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   plot(5:TL, MFI_df_info_mean_true[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "mean_info(真實)",
-       main = paste("ability = ",i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
+       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
   lines(5:TL, MFII_df_info_mean_true[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_info_mean_true[i, ], col = "red", lwd = 3)
 }
@@ -515,7 +515,7 @@ for (i in 1:7) {
 # 繪製 mean_info(基於估計能力) # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   plot(5:TL, MFI_df_info_mean_est[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "mean_info(估計)",
-       main = paste("ability = ",i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
+       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
   lines(5:TL, MFII_df_info_mean_est[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_info_mean_est[i, ], col = "red", lwd = 3)
 }
