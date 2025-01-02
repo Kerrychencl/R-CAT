@@ -4,17 +4,17 @@ p_load(catR, progress, doSNOW)
 
 ###---------------------數據生成---------------------
 ## 受試者能力生成
-R <- 10  # 將能力值重複R遍
+R <- 1000  # 將能力值重複R遍
 theta.true <- rep(c(-3, -2, -1, 0, 1, 2, 3), each = R)  # theta.true生成
 
 ##參數設定 (受測者數量、題庫和測驗長度)
 # 受測者數量(np)：1400
 np <- length(theta.true)
 # 題庫大小的選擇(ni)(1：400，其他數字：200)
-pool <- 0
+pool <- 1
 if (pool == 1) ni = 400 else ni = 200  # 試題數量(選其中一個題庫)：400 and 200
 # 測驗訂定的題數長度(TL)：60
-TL <- 10
+TL <- 60
 
 ## 題庫生成的選擇(1：均勻分布，其他數字：常態分布)
 distribution <- 1
@@ -29,7 +29,7 @@ if (distribution == 1) {
 } else {
   ## 試題參數生成(常態分布)
   item_pool[, 1] <- runif(ni, min = 0.5, max = 2.0)  # 鑑別度
-  item_pool[, 2] <- rnorm(ni)  # 難度
+  item_pool[, 2] <- rnorm(ni, 0, 1)  # 難度
   item_pool[, 1] <- runif(ni, min = 0.15, max = 0.30)  # 猜測度
   item_pool[, 4] <- 1  # inattention value 
 }
@@ -49,7 +49,6 @@ for (i in 1:np){
   }
 }
 
-###
 ##---------------------平行運算前置設定---------------------
 # 確定可用核心數量(平行計算前置設定)
 num_cores <- detectCores() - 1  # 預留一個核心給系統
@@ -121,7 +120,7 @@ for (i in 1:np) {
 }
 
 # 紀錄作答結束的時間
-end_time <- Sys.time()
+end_time_MFI <- Sys.time()
 
 # 計算模擬時間
 exec_timeCAT_MFI <- end_time_MFI - start_time_MFI
@@ -376,7 +375,6 @@ cat("MLWI模擬時間：", exec_timeCAT_MLWI, "\n")
 # 關閉平行運算設置
 close(pb)
 stopCluster(cl) 
-
 
 ###----------------------MLWI_data.frame生成結果----------------------
 ## 數據框的建立
