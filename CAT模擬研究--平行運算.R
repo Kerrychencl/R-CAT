@@ -80,7 +80,7 @@ start_time_MFI <- Sys.time()
 
 # 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
-  # 因為np個人是同時進行的，所以原本矩陣nrow是np的，都變為TL長度的向量即可
+  # 創建運算內部會用到的向量或矩陣
   ever.used <- numeric(TL)  # 向量，用於紀錄已經選取過的題目
   theta.est_eap <- numeric(TL)  # 向量，用於紀錄當前的能力值
   est_info <- numeric(TL)  # 向量，用於紀錄當前能力值下的訊息量
@@ -101,12 +101,13 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     
     ## 估計能力估計值 
     theta.est_eap[j] <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 循環外查看用的能力估計值
-    theta_est_in <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 循環內用的能力估計直
+    theta_est_in <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 循環內用的能力估計值
     
     ## 紀錄當前能力值下的訊息量 and 當前真實能力值下的訊息量
     est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)
     true_info[j] <- mean(Ii(theta.true[i], eap.para[1:j, ])$Ii)
   }
+
   # 將數據轉為 data.frame 格式返回
   data.frame(
     id = i,
@@ -125,7 +126,7 @@ for (i in 1:np) {
   MFI_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
-## MFI資料輸出(輸出為數據框，所以要用as.data.frame())
+## MFI資料輸出(輸出必須要為數據框格式，所以要用as.data.frame())
 write_xlsx(as.data.frame(MFI_ever_used), "unif400_MFI_ever_used.xlsx")
 write_xlsx(as.data.frame(MFI_theta_table), "unif400_MFI_theta_table.xlsx")
 write_xlsx(as.data.frame(MFI_est_info_table), "unif400_MFI_est_info_table.xlsx")
@@ -209,7 +210,7 @@ write_xlsx(MFI_df_info_mean_true, "unif400_MFI_info_mean_true.xlsx")
 ### CAT相關矩陣宣告
 MFII_true_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄真實能力值下，計算的訊息量
 MFII_est_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄當前能力值下，計算的訊息量
-MFII_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄當前的能力估計值
+MFII_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄每一個當前的能力估計值
 MFII_ever_used <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄已經選取過的題目
 
 ## 紀錄測試時間(使用系統的時間)
@@ -225,13 +226,13 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
   eap.para <- matrix(nrow = TL, ncol = 4)  # 矩陣，用以記錄作答過的題目參數
   admin.x <- c()  # 建立一個空向量 (裝取被選到的題目的題號)
   ever.used_in <- numeric(ni)  # 查看過去的以經選過的題目
-  theta_est_in <- c(0)  # MFI需要的當前能力值，裝取用來尋找下一題的能力值
+  theta_est_in <- c(0)  # MFII需要的當前能力值，裝取用來尋找下一題的能力值
   
   # 每一個人作答情況的循環
   for (j in 1:TL) {
     ## 題目選取邏輯
-    # 計算出對應theta所有試題訊息量的interval(SE)
-    SE <- 1.96 * (sqrt(1 / Ii(theta_est_in, item_pool)$Ii))
+    # 計算出對應theta所有試題訊息量的interval(Standard Error)
+    SE <- 1.96 * (sqrt(1 / Ii(theta_est_in, item_pool)$Ii))  # 1.96為信賴區間的設定值，可更改
     # 拉出interval內，20個點的能力值
     FI_Interval_20point <- matrix(nrow = ni, ncol = 20)
     for (k in 1:ni) {
@@ -251,11 +252,11 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     }
     # 找出未用過的題目中，訊息量總和最大的位置
     infosum_20point[ever.used_in != 0] <- 0 # 屏蔽先前已經使用的試題(把訊息量歸0)
-    admin.item <- which.max(infosum_20point) # 找出訊息量最大值(返回位置的數字)
+    admin.item <- which.max(infosum_20point) # 找出訊息量最大值(返回位置號碼)
     
     ## 更新作答紀錄(紀錄作答過的題號、該題的作答反應 and 作答過的題目的試題參數)
-    ever.used_in[admin.item] <- 1 # 標記第n題已經施測(用於109行)
-    ever.used[j] <- admin.item  # 裝取已經選過的題目的題號(用於查看整體)
+    ever.used_in[admin.item] <- 1 # 標記第n題已經施測
+    ever.used[j] <- admin.item  # 裝取已經選過的題目的題號(用於查看整體數據)
     admin.x[j] <- response[i, admin.item]  # 當前題目的作答反應
     eap.para[j, ] <- item_pool[admin.item, ]  # 當前題目的試題參數
     
