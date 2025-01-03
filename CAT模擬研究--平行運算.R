@@ -218,7 +218,7 @@ start_time_MFII <- Sys.time()
 
 # 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
-  # 因為np個人是同時進行的，所以原本矩陣nrow是np的，都變為TL長度的向量即可
+  # 創建運算內部會用到的向量或矩陣
   ever.used <- numeric(TL)  # 向量，用於紀錄已經選取過的題目
   theta.est_eap <- numeric(TL)  # 向量，用於紀錄當前的能力值
   est_info <- numeric(TL)  # 向量，用於紀錄當前能力值下的訊息量
@@ -377,7 +377,7 @@ start_time_MLWI <- Sys.time()
 
 # 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
-  # 因為np個人是同時進行的，所以原本矩陣nrow是np的，都變為TL長度的向量即可
+  # 創建運算內部會用到的向量或矩陣
   ever.used <- numeric(TL)  # 向量，用於紀錄已經選取過的題目
   theta.est_eap <- numeric(TL)  # 向量，用於紀錄當前的能力值
   est_info <- numeric(TL)  # 向量，用於紀錄當前能力值下的訊息量
@@ -399,8 +399,8 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     theta.est_eap[j] <- eapEst(eap.para[1:j, ], admin.x[1:j])
     
     ## 紀錄當前能力值下的訊息量 and 當前真實能力值下的訊息量
-    est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)
-    true_info[j] <- mean(Ii(theta.true[i], eap.para[1:j, ])$Ii)
+    est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)  # 當前能力值下的訊息量
+    true_info[j] <- mean(Ii(theta.true[i], eap.para[1:j, ])$Ii)  # 當前真實能力值下的訊息量
   }
   # 將數據轉為 data.frame 格式返回
   data.frame(
