@@ -2,7 +2,7 @@
 library(pacman)
 p_load(catR, doSNOW, parallel, progress, writexl)
 
-###---------------------數據生成---------------------
+###---------------------數據生成與輸出---------------------
 ## 受試者能力生成
 R <- 1000  # 將能力值重複R遍
 theta.true <- rep(c(-3, -2, -1, 0, 1, 2, 3), each = R)  # theta.true生成
@@ -27,32 +27,36 @@ if (distribution == 1) {
   item_pool[, 1] <- runif(ni, min = 0.5, max = 2.0)  # 鑑別度
   item_pool[, 2] <- runif(ni, min = -3.0, max = 3.0)  # 難度
   item_pool[, 3] <- runif(ni, min = 0.15, max = 0.30)  # 猜測度
-  item_pool[, 4] <- 1  # inattention value 
+  item_pool[, 4] <- 1  # inattention value (沒有要用此參數，所以設定為1) 
 } else {
-  ## 試題參數生成(常態分布)
+  ## 試題參數生成(常態分布)  # 為了增加對比度，所以只有難度設為常態分布
   item_pool[, 1] <- runif(ni, min = 0.5, max = 2.0)  # 鑑別度
   item_pool[, 2] <- rnorm(ni)  # 難度
   item_pool[, 1] <- runif(ni, min = 0.15, max = 0.30)  # 猜測度
-  item_pool[, 4] <- 1  # inattention value 
+  item_pool[, 4] <- 1  # inattention value (沒有要用此參數，所以設定為1) 
 }
 
 
 #### 作答反應資料產生
 response <- matrix(nrow = np, ncol = ni)  # 創建作答反應矩陣，用於裝取作答反應
-for (i in 1:np){
-  for (j in 1:ni){
+for (i in 1:np) {
+  for (j in 1:ni) {
     # 3PL的答對率公式
     p = item_pool[j, 3] + (1 - item_pool[j, 3] ) * exp(item_pool[j, 1] * (theta.true[i] - item_pool[j, 2])) / (
       1 + exp(item_pool[j, 1] * (theta.true[i] - item_pool[j, 2])))
     # 隨機生成一個連續的機率資料 (最小值為0，最大值為1)
     r = runif(1)
-    # 如果答對率高於隨機機率，就代表達對，反之則為錯
+    # 如果答對率高於隨機機率，就代表答對，反之則為答錯
     if (p >= r) response[i, j] = 1 else response[i, j] = 0
   }
 }
 
-##---------------------平行運算前置設定---------------------
-# 確定可用核心數量(平行計算前置設定)
+## 輸出作答反應與題庫
+write_xlsx(as.data.frame(response), "unif400_response.xlsx")
+write_xlsx(as.data.frame(item_pool), "unif400_item_pool.xlsx")
+
+###---------------------平行運算前置設定---------------------
+## 確定可用核心數量(平行計算前置設定)
 num_cores <- detectCores() - 1  # 預留一個核心給系統
 cl <- makeCluster(num_cores)
 registerDoSNOW(cl)
@@ -121,6 +125,12 @@ for (i in 1:np) {
   MFI_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
+## MFI資料輸出(輸出為數據框，所以要用as.data.frame())
+write_xlsx(as.data.frame(MFI_ever_used), "unif400_MFI_ever_used.xlsx")
+write_xlsx(as.data.frame(MFI_theta_table), "unif400_MFI_theta_table.xlsx")
+write_xlsx(as.data.frame(MFI_est_info_table), "unif400_MFI_est_info_table.xlsx")
+write_xlsx(as.data.frame(MFI_true_info_table), "unif400_MFI_true_info_table.xlsx")
+
 ## 紀錄作答結束的時間
 end_time_MFI <- Sys.time()
 
@@ -150,8 +160,10 @@ cat("MFI模擬時間：", formatted_time_MFI, "\n")
 ## 數據框的建立
 # 數據框名字建立
 row_name <- c("-3", "-2", "-1", "0", "1", "2", "3")  # 列的名字(即，左側)
-col_name <- c()  # 行的名字(即，上側)
-for (i in 1 : (TL - 4)) {col_name[i] <- paste0("第", i + 4, "題")}
+col_name <- c()  # 裝取行的名字(即，上側)
+for (i in 1:(TL - 4)) {  # 行的名字(生成，因為只需要從第5題開始，所以為TL - 4
+  col_name[i] <- paste0("第", i + 4, "題")
+}
 # bias數據框
 MFI_df_bias <- data.frame(matrix(0, nrow = 7, ncol = TL - 4))
 row.names(MFI_df_bias) <- row_name
@@ -222,13 +234,13 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     SE <- 1.96 * (sqrt(1 / Ii(theta_est_in, item_pool)$Ii))
     # 拉出interval內，20個點的能力值
     FI_Interval_20point <- matrix(nrow = ni, ncol = 20)
-    for (k in 1:ni){
-      FI_Interval_20point[k, ] <- seq(theta_est_in - SE[k] ,theta_est_in + SE[k] , length.out = 20)
+    for (k in 1:ni) {
+      FI_Interval_20point[k, ] <- seq(theta_est_in - SE[k] , theta_est_in + SE[k] , length.out = 20)
     }
     # 計算每一題20個能力值對應的訊息量
     info_matrix <- matrix(nrow = ni, ncol = 20)  # 矩陣，用來裝取20個能力值對應的訊息量
-    for (item in 1:ni){
-      for (point in 1:20){
+    for (item in 1:ni) {
+      for (point in 1:20) {
         info_matrix[item, point] <- Ii(FI_Interval_20point[item, point], item_pool[item, ])$Ii
       }
     }
@@ -238,7 +250,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
       infosum_20point[item] <- sum(info_matrix[item, ])
     }
     # 找出未用過的題目中，訊息量總和最大的位置
-    infosum_20point[ever.used_in != 0] <- 0 # 屏蔽先前已經使用的試題
+    infosum_20point[ever.used_in != 0] <- 0 # 屏蔽先前已經使用的試題(把訊息量歸0)
     admin.item <- which.max(infosum_20point) # 找出訊息量最大值(返回位置的數字)
     
     ## 更新作答紀錄(紀錄作答過的題號、該題的作答反應 and 作答過的題目的試題參數)
@@ -249,7 +261,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     
     ## 估計能力估計值 
     theta.est_eap[j] <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 能力估計值，查看整體用的
-    theta_est_in <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 循環內用的能力估計直
+    theta_est_in <- eapEst(eap.para[1:j, ], admin.x[1:j])  # 循環內用的能力估計值
     
     ## 紀錄當前能力值下的訊息量 and 當前真實能力值下的訊息量
     est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)
@@ -273,6 +285,12 @@ for (i in 1:np) {
   MFII_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
+# MFII資料輸出
+write_xlsx(as.data.frame(MFII_ever_used), "unif400_MFII_ever_used.xlsx")
+write_xlsx(as.data.frame(MFII_theta_table), "unif400_MFII_theta_table.xlsx")
+write_xlsx(as.data.frame(MFII_est_info_table), "unif400_MFII_est_info_table.xlsx")
+write_xlsx(as.data.frame(MFII_true_info_table), "unif400_MFII_true_info_table.xlsx")
+  
 ## 紀錄作答結束的時間
 end_time_MFII <- Sys.time()
 
@@ -303,7 +321,9 @@ cat("MFII模擬時間：", formatted_time_MFII, "\n")
 # 數據框名字建立
 row_name <- c("-3", "-2", "-1", "0", "1", "2", "3")  # 列的名字(即，左側)
 col_name <- c()  # 行的名字(即，上側)
-for (i in 1 : (TL - 4)) {col_name[i] <- paste0("第", i + 4, "題")}
+for (i in 1:(TL - 4)) {
+  col_name[i] <- paste0("第", i + 4, "題")
+}
 # bias數據框
 MFII_df_bias <- data.frame(matrix(0, nrow = 7, ncol = TL - 4))
 row.names(MFII_df_bias) <- row_name
@@ -399,6 +419,12 @@ for (i in 1:np) {
   MLWI_true_info_table[i, ] <- CAT_data[((i - 1) * TL + 1):(i * TL), 5]
 }
 
+# MLWI資料輸出
+write_xlsx(as.data.frame(MLWI_ever_used), "unif400_MLWI_ever_used.xlsx")
+write_xlsx(as.data.frame(MLWI_theta_table), "unif400_MLWI_theta_table.xlsx")
+write_xlsx(as.data.frame(MLWI_est_info_table), "unif400_MLWI_est_info_table.xlsx")
+write_xlsx(as.data.frame(MLWI_true_info_table), "unif400_MLWI_true_info_table.xlsx")  
+
 ## 紀錄作答結束的時間
 end_time_MLWI <- Sys.time()
 
@@ -433,7 +459,9 @@ stopCluster(cl)
 # 數據框名字建立
 row_name <- c("-3", "-2", "-1", "0", "1", "2", "3")  # 列的名字(即，左側)
 col_name <- c()  # 行的名字(即，上側)
-for (i in 1 : (TL - 4)) {col_name[i] <- paste0("第", i + 4, "題")}
+for (i in 1:(TL - 4)) {
+  col_name[i] <- paste0("第", i + 4, "題")
+}
 # bias數據框
 MLWI_df_bias <- data.frame(matrix(0, nrow = 7, ncol = TL - 4))
 row.names(MLWI_df_bias) <- row_name
