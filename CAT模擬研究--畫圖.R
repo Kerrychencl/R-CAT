@@ -24,7 +24,7 @@ MLWI_df_MSE <- read_excel("unif400_MLWI_MSE.xlsx")
 MLWI_df_info_mean_est <- read_excel("unif400_MLWI_info_mean_est.xlsx")
 MLWI_df_info_mean_true <- read_excel("unif400_MLWI_info_mean_true.xlsx")
 
-###----------------------test_plot畫圖與輸出(2準則)----------------------
+###----------------------(測試用)plot畫圖與輸出(2準則)----------------------
 # 繪製bias # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
   # 繪圖
