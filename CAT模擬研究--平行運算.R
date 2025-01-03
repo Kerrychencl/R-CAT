@@ -475,45 +475,79 @@ write_xlsx(MLWI_df_info_mean_est, "unif400_MLWI_info_mean_est.xlsx")
 write_xlsx(MLWI_df_info_mean_true, "unif400_MLWI_info_mean_true.xlsx")
 
 
-###----------------------展示結果(圖片)----------------------
+###----------------------展示結果與輸出(圖片)----------------------
 # 繪製bias # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
-  plot(5:TL, MFI_df_bias[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "bias",
-       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(-1.6, 1.6)) # ylim 自行調整
+  # 開啟圖形設備，設置保存文件的路徑和文件名
+  png(filename = paste0("bias_ability_", i - 4, ".png"), width = 800, height = 600)
+  
+  # 繪圖
+  plot(5:TL, MFI_df_bias[i, ], type = "l", col = "blue", lwd = 3, xlab = "item length", ylab = "bias",
+       main = paste0("ability = ", i - 4), xlim = c(1, TL), ylim = c(-1.6, 1.6)) # ylim 自行調整
   lines(5:TL, MFII_df_bias[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_bias[i, ], col = "red", lwd = 3)
-  legend("topright", legend = c("MFI", "MFII", "MLWI"), col = c("blue", "green", "red"), lty = 1, lwd = 2)
+  
+  # 關閉圖形設備
+  dev.off()
 }
 
 # 繪製var # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
-  plot(5:TL, MFI_df_var[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "varience",
-       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .4)) # ylim 自行調整
+  # 開啟圖形設備，設置保存文件的路徑和文件名
+  png(filename = paste0("var_ability_", i - 4, ".png"), width = 800, height = 600)
+  
+  # 繪圖
+  plot(5:TL, MFI_df_var[i, ], type = "l", col = "blue", lwd = 3, xlab = "item length", ylab = "varience",
+       main = paste0("ability = ", i - 4), xlim = c(1, TL), ylim = c(0, .4)) # ylim 自行調整
   lines(5:TL, MFII_df_var[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_var[i, ], col = "red", lwd = 3)
-}
+  
+  # 關閉圖形設備
+  dev.off()
+  }
 
 # 繪製MSE # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
-  plot(5:TL, MFI_df_MSE[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "MSE",
-       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, 2)) # ylim 自行調整
+  # 開啟圖形設備，設置保存文件的路徑和文件名
+  png(filename = paste0("MSE_ability_", i - 4, ".png"), width = 800, height = 600)
+  
+  # 繪圖
+  plot(5:TL, MFI_df_MSE[i, ], type = "l", col = "blue", lwd = 3, xlab = "item length", ylab = "MSE",
+       main = paste0("ability = ", i - 4), xlim = c(1, TL), ylim = c(0, 2)) # ylim 自行調整
   lines(5:TL, MFII_df_MSE[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_MSE[i, ], col = "red", lwd = 3)
-}
+  
+  # 關閉圖形設備
+  dev.off()
+  }
 
 # 繪製 mean_info(基於真實能力) # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
-  plot(5:TL, MFI_df_info_mean_true[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "mean_info(真實)",
-       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
+  # 開啟圖形設備，設置保存文件的路徑和文件名
+  png(filename = paste0("info_true_ability_", i - 4, ".png"), width = 800, height = 600)
+  
+  # 繪圖
+  plot(5:TL, MFI_df_info_mean_true[i, ], type = "l", col = "blue", lwd = 3, xlab = "item length", ylab = "mean info(true)"
+       , main = paste0("ability = ", i - 4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
   lines(5:TL, MFII_df_info_mean_true[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_info_mean_true[i, ], col = "red", lwd = 3)
-}
+  
+  # 關閉圖形設備
+  dev.off()
+  }
 
 # 繪製 mean_info(基於估計能力) # 藍:MFI 綠:MFII 紅:MLWI
 for (i in 1:7) {
-  plot(5:TL, MFI_df_info_mean_est[i, ], type = "l", col = "blue", lwd = 3, xlab = "itemlength", ylab = "mean_info(估計)",
-       main = paste("ability = ", i-4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
+  # 開啟圖形設備，設置保存文件的路徑和文件名
+  png(filename = paste0("info_est_ability_", i - 4, ".png"), width = 800, height = 600)
+  
+  # 繪圖
+  plot(5:TL, MFI_df_info_mean_est[i, ], type = "l", col = "blue", lwd = 3, xlab = "item length", ylab = "mean info(est)"
+       , main = paste0("ability = ", i - 4), xlim = c(1, TL), ylim = c(0, .5)) # ylim 自行調整
   lines(5:TL, MFII_df_info_mean_est[i, ], col = "green", lwd = 3)
   lines(5:TL, MLWI_df_info_mean_est[i, ], col = "red", lwd = 3)
-}
+  
+  # 關閉圖形設備
+  dev.off()
+  }
   
