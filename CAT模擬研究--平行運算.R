@@ -76,7 +76,7 @@ MFI_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄當前的�
 MFI_ever_used <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄已經選取過的題目
 
 ##紀錄測試時間(使用系統的時間)
-start_time_MFI <- Sys.time()  # 紀錄測試時間(使用系統的時間)
+start_time_MFI <- Sys.time()  
 
 # 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
@@ -213,7 +213,7 @@ MFII_theta_table <-  matrix(NA, nrow = np, ncol = TL) # 矩陣，紀錄當前的
 MFII_ever_used <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄已經選取過的題目
 
 ## 紀錄測試時間(使用系統的時間)
-start_time_MFII <- Sys.time()  # 紀錄測試時間(使用系統的時間)
+start_time_MFII <- Sys.time()
 
 # 平行運算
 CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.snow = opts) %dopar% {
