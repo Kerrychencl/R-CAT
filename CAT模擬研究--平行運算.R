@@ -86,7 +86,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
   est_info <- numeric(TL)  # 向量，用於紀錄當前能力值下的訊息量
   true_info <- numeric(TL)  # 向量，用於紀錄真實能力值下的訊息量
   eap.para <- matrix(nrow = TL, ncol = 4)  # 矩陣，用以記錄作答過的題目參數
-  admin.x <- c()  # 建立一個空向量 (裝取被選到的題目的題號)
+  admin.x <- c()  # 向量，裝取被選到的題目的題號
   theta_est_in <- c(0)  # MFI要使用的當前能力值
   
   # 每一個人作答情況的循環
@@ -150,7 +150,7 @@ formatted_time_MFI <- trimws(paste(  # trimws()去除空格
   if (days > 0) sprintf("%d 天", days) else "",
   if (hours > 0) sprintf("%02d 小時", hours) else "",
   if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
-  if (seconds > 0) sprintf("%.2f 秒", seconds) else ""
+  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 如果工作量小，可以不去除小數點%.2f
 ))
 
 # 輸出模擬時間
@@ -224,7 +224,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
   est_info <- numeric(TL)  # 向量，用於紀錄當前能力值下的訊息量
   true_info <- numeric(TL)  # 向量，用於紀錄真實能力值下的訊息量
   eap.para <- matrix(nrow = TL, ncol = 4)  # 矩陣，用以記錄作答過的題目參數
-  admin.x <- c()  # 建立一個空向量 (裝取被選到的題目的題號)
+  admin.x <- c()  # 向量，裝取被選到的題目的題號
   ever.used_in <- numeric(ni)  # 查看過去的以經選過的題目
   theta_est_in <- c(0)  # MFII需要的當前能力值，裝取用來尋找下一題的能力值
   
@@ -268,6 +268,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)
     true_info[j] <- mean(Ii(theta.true[i], eap.para[1:j, ])$Ii)
   }
+  
   # 將數據轉為 data.frame 格式返回
   data.frame(
     id = i,
@@ -402,6 +403,7 @@ CAT_data <- foreach(i = 1:np, .combine = rbind, .packages = "catR", .options.sno
     est_info[j] <- mean(Ii(theta.est_eap, eap.para[1:j, ])$Ii)  # 當前能力值下的訊息量
     true_info[j] <- mean(Ii(theta.true[i], eap.para[1:j, ])$Ii)  # 當前真實能力值下的訊息量
   }
+  
   # 將數據轉為 data.frame 格式返回
   data.frame(
     id = i,
