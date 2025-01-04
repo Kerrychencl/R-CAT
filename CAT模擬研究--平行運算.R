@@ -3,11 +3,11 @@ library(pacman)
 p_load(catR, doSNOW, parallel, progress, writexl)
 
 ###---------------------數據生成與輸出---------------------
-## 受試者能力生成
+## 受試者真實能力生成
 R <- 1000  # 將能力值重複R遍
 theta.true <- rep(c(-3, -2, -1, 0, 1, 2, 3), each = R)  # theta.true生成
 
-##參數設定 (受測者數量、題庫和測驗長度)
+###參數設定 (受測者數量、題庫和測驗長度)
 # 受測者數量(np)：R*7=7000
 np <- length(theta.true)
 
@@ -18,7 +18,7 @@ if (pool == 1) ni = 400 else ni = 200  # 試題數量(選其中一個題庫)：4
 # 測驗訂定的題數長度(TL)：60
 TL <- 60
 
-## 題庫生成的選擇(1：均勻分布，其他數字：常態分布)
+## 題庫的生成選擇(1：均勻分布，其他數字：常態分布)
 distribution <- 1
 ### 題庫生成
 item_pool <- matrix(nrow = ni, ncol = 4)  #創建空矩陣，用於裝取題目參數
@@ -37,7 +37,7 @@ if (distribution == 1) {
 }
 
 
-#### 作答反應資料產生
+### 作答反應資料產生
 response <- matrix(nrow = np, ncol = ni)  # 創建作答反應矩陣，用於裝取作答反應
 for (i in 1:np) {
   for (j in 1:ni) {
@@ -68,6 +68,7 @@ progress <- function(n) {
   cat(sprintf("\r任務進度 %d/%d |", n, np))  # 顯示當前進度
 }
 opts <- list(progress = progress)
+
 ###---------------------MFICAT(平行計算)---------------------------
 ### CAT相關矩陣宣告
 MFI_true_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄真實能力值下，計算的訊息量
@@ -317,7 +318,6 @@ formatted_time_MFII <- trimws(paste(  # trimws()去除空格
 # 輸出模擬時間
 cat("MFII模擬時間：", formatted_time_MFII, "\n")
 
-
 ###----------------------MFII_data.frame生成結果與輸出----------------------
 ## 數據框的建立
 # 數據框名字建立
@@ -365,6 +365,7 @@ write_xlsx(MFII_df_var, "unif400_MFII_var.xlsx")
 write_xlsx(MFII_df_MSE, "unif400_MFII_MSE.xlsx")
 write_xlsx(MFII_df_info_mean_est, "unif400_MFII_info_mean_est.xlsx")
 write_xlsx(MFII_df_info_mean_true, "unif400_MFII_info_mean_true.xlsx")
+
 
 ###---------------------MLWICAT(平行計算)---------------------------
 ### CAT相關矩陣宣告
