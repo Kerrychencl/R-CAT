@@ -133,31 +133,6 @@ write_xlsx(as.data.frame(MFI_theta_table), "unif400_MFI_theta_table.xlsx")
 write_xlsx(as.data.frame(MFI_est_info_table), "unif400_MFI_est_info_table.xlsx")
 write_xlsx(as.data.frame(MFI_true_info_table), "unif400_MFI_true_info_table.xlsx")
 
-## 紀錄作答結束的時間
-end_time_MFI <- Sys.time()
-
-# 計算模擬時間
-exec_timeCAT_MFI <- end_time_MFI - start_time_MFI
-
-# 將時間差轉換為天、時、分、秒
-total_seconds <- as.numeric(exec_timeCAT_MFI, units = "secs")
-days <- floor(total_seconds / (24 * 3600))
-hours <- floor((total_seconds %% (24 * 3600)) / 3600)
-minutes <- floor((total_seconds %% 3600) / 60)
-seconds <- round(total_seconds %% 60, 2)  # 可選保留小數
-
-# 動態紀錄時間
-formatted_time_MFI <- trimws(paste(  # trimws()去除空格
-  if (days > 0) sprintf("%d 天", days) else "",
-  if (hours > 0) sprintf("%02d 小時", hours) else "",
-  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
-  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 如果工作量小，可以不去除小數點%.2f
-))
-
-# 輸出模擬時間
-cat("MFI模擬時間：", formatted_time_MFI, "\n")
-
-
 ###----------------------MFI_data.frame生成結果與輸出----------------------
 ## 數據框的建立
 # 數據框名字建立
@@ -206,7 +181,31 @@ write_xlsx(MFI_df_MSE, "unif400_MFI_MSE.xlsx")
 write_xlsx(MFI_df_info_mean_est, "unif400_MFI_info_mean_est.xlsx")
 write_xlsx(MFI_df_info_mean_true, "unif400_MFI_info_mean_true.xlsx")
 
+## 紀錄作答結束的時間
+end_time_MFI <- Sys.time()
 
+# 計算模擬時間
+exec_timeCAT_MFI <- end_time_MFI - start_time_MFI
+
+# 將時間差轉換為天、時、分、秒
+total_seconds <- as.numeric(exec_timeCAT_MFI, units = "secs")
+days <- floor(total_seconds / (24 * 3600))
+hours <- floor((total_seconds %% (24 * 3600)) / 3600)
+minutes <- floor((total_seconds %% 3600) / 60)
+seconds <- round(total_seconds %% 60, 2)  # 可選保留小數
+
+# 動態紀錄時間
+formatted_time_MFI <- trimws(paste(  # trimws()去除空格
+  if (days > 0) sprintf("%d 天", days) else "",
+  if (hours > 0) sprintf("%02d 小時", hours) else "",
+  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
+  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 如果工作量小，可以不去除小數點%.2f
+))
+
+# 輸出模擬時間
+cat("MFI模擬時間：", formatted_time_MFI, "\n")
+
+  
 ###---------------------MFIICAT(平行計算)---------------------------
 ### CAT相關矩陣宣告
 MFII_true_info_table <- matrix(NA, nrow = np, ncol = TL)  # 矩陣，用於紀錄真實能力值下，計算的訊息量
@@ -293,30 +292,6 @@ write_xlsx(as.data.frame(MFII_ever_used), "unif400_MFII_ever_used.xlsx")
 write_xlsx(as.data.frame(MFII_theta_table), "unif400_MFII_theta_table.xlsx")
 write_xlsx(as.data.frame(MFII_est_info_table), "unif400_MFII_est_info_table.xlsx")
 write_xlsx(as.data.frame(MFII_true_info_table), "unif400_MFII_true_info_table.xlsx")
-  
-## 紀錄作答結束的時間
-end_time_MFII <- Sys.time()
-
-# 計算模擬時間
-exec_timeCAT_MFII <- end_time_MFII - start_time_MFII
-
-# 將時間差轉換為天、時、分、秒
-total_seconds <- as.numeric(exec_timeCAT_MFII, units = "secs")
-days <- floor(total_seconds / (24 * 3600))
-hours <- floor((total_seconds %% (24 * 3600)) / 3600)
-minutes <- floor((total_seconds %% 3600) / 60)
-seconds <- round(total_seconds %% 60)  # 可選保留小數秒
-
-# 動態紀錄時間
-formatted_time_MFII <- trimws(paste(  # trimws()去除空格
-  if (days > 0) sprintf("%d 天", days) else "",
-  if (hours > 0) sprintf("%02d 小時", hours) else "",
-  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
-  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 可不去除小數點%.2f
-))
-
-# 輸出模擬時間
-cat("MFII模擬時間：", formatted_time_MFII, "\n")
 
 ###----------------------MFII_data.frame生成結果與輸出----------------------
 ## 數據框的建立
@@ -365,6 +340,30 @@ write_xlsx(MFII_df_var, "unif400_MFII_var.xlsx")
 write_xlsx(MFII_df_MSE, "unif400_MFII_MSE.xlsx")
 write_xlsx(MFII_df_info_mean_est, "unif400_MFII_info_mean_est.xlsx")
 write_xlsx(MFII_df_info_mean_true, "unif400_MFII_info_mean_true.xlsx")
+
+## 紀錄作答結束的時間
+end_time_MFII <- Sys.time()
+
+# 計算模擬時間
+exec_timeCAT_MFII <- end_time_MFII - start_time_MFII
+
+# 將時間差轉換為天、時、分、秒
+total_seconds <- as.numeric(exec_timeCAT_MFII, units = "secs")
+days <- floor(total_seconds / (24 * 3600))
+hours <- floor((total_seconds %% (24 * 3600)) / 3600)
+minutes <- floor((total_seconds %% 3600) / 60)
+seconds <- round(total_seconds %% 60)  # 可選保留小數秒
+
+# 動態紀錄時間
+formatted_time_MFII <- trimws(paste(  # trimws()去除空格
+  if (days > 0) sprintf("%d 天", days) else "",
+  if (hours > 0) sprintf("%02d 小時", hours) else "",
+  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
+  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 可不去除小數點%.2f
+))
+
+# 輸出模擬時間
+cat("MFII模擬時間：", formatted_time_MFII, "\n")
 
 
 ###---------------------MLWICAT(平行計算)---------------------------
@@ -429,34 +428,9 @@ write_xlsx(as.data.frame(MLWI_theta_table), "unif400_MLWI_theta_table.xlsx")
 write_xlsx(as.data.frame(MLWI_est_info_table), "unif400_MLWI_est_info_table.xlsx")
 write_xlsx(as.data.frame(MLWI_true_info_table), "unif400_MLWI_true_info_table.xlsx")  
 
-## 紀錄作答結束的時間
-end_time_MLWI <- Sys.time()
-
-# 計算模擬時間
-exec_timeCAT_MLWI <- end_time_MLWI - start_time_MLWI
-
-# 將時間差轉換為天、時、分、秒
-total_seconds <- as.numeric(exec_timeCAT_MLWI, units = "secs")
-days <- floor(total_seconds / (24 * 3600))
-hours <- floor((total_seconds %% (24 * 3600)) / 3600)
-minutes <- floor((total_seconds %% 3600) / 60)
-seconds <- round(total_seconds %% 60)  # 可選保留小數秒
-
-# 動態紀錄時間
-formatted_time_MLWI <- trimws(paste(  # trimws()去除空格
-  if (days > 0) sprintf("%d 天", days) else "",
-  if (hours > 0) sprintf("%02d 小時", hours) else "",
-  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
-  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 可不去除小數點%.2f
-))
-
-# 輸出模擬時間
-cat("MLWI模擬時間：", formatted_time_MLWI, "\n")
-
 # 關閉平行運算設置
 close(pb)
 stopCluster(cl) 
-
 
 ###----------------------MLWI_data.frame生成結果與輸出----------------------
 ## 數據框的建立
@@ -505,6 +479,30 @@ write_xlsx(MLWI_df_var, "unif400_MLWI_var.xlsx")
 write_xlsx(MLWI_df_MSE, "unif400_MLWI_MSE.xlsx")
 write_xlsx(MLWI_df_info_mean_est, "unif400_MLWI_info_mean_est.xlsx")
 write_xlsx(MLWI_df_info_mean_true, "unif400_MLWI_info_mean_true.xlsx")
+
+## 紀錄作答結束的時間
+end_time_MLWI <- Sys.time()
+
+# 計算模擬時間
+exec_timeCAT_MLWI <- end_time_MLWI - start_time_MLWI
+
+# 將時間差轉換為天、時、分、秒
+total_seconds <- as.numeric(exec_timeCAT_MLWI, units = "secs")
+days <- floor(total_seconds / (24 * 3600))
+hours <- floor((total_seconds %% (24 * 3600)) / 3600)
+minutes <- floor((total_seconds %% 3600) / 60)
+seconds <- round(total_seconds %% 60)  # 可選保留小數秒
+
+# 動態紀錄時間
+formatted_time_MLWI <- trimws(paste(  # trimws()去除空格
+  if (days > 0) sprintf("%d 天", days) else "",
+  if (hours > 0) sprintf("%02d 小時", hours) else "",
+  if (minutes > 0) sprintf("%02d 分鐘", minutes) else "",
+  if (seconds > 0) sprintf("%d 秒", seconds) else ""  # 可不去除小數點%.2f
+))
+
+# 輸出模擬時間
+cat("MLWI模擬時間：", formatted_time_MLWI, "\n")
 
 
 ###----------------------展示結果與輸出(圖片)----------------------
