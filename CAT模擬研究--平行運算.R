@@ -165,7 +165,7 @@ colnames(MFI_df_info_mean_true) <- col_name
 
 ## 計算bias, variance, MSE, info_mean_est and info_mean_true
 for (i in 1:7) {
-  for (j in 1:(TL - 4)) {
+  for (j in 1:(TL - 4)) {  # 只做第5題到第60題
     MFI_df_bias[i, j] <- theta.true[i * R] - mean(MFI_theta_table[((i - 1) * R + 1):(i * R), j + 4])  # bias
     MFI_df_var[i, j] <- var(MFI_theta_table[((i - 1) * R + 1):(i * R), j + 4])  # variance
     MFI_df_MSE[i, j] <- mean((theta.true[i * R] - MFI_theta_table[((i - 1) * R + 1):(i * R), j + 4]) ^ 2)  # MSE
