@@ -1,6 +1,9 @@
 # 啟用必要的套件
-library(pacman)
-p_load(catR, doSNOW, parallel, progress, writexl)
+library(catR)  # 模擬言者要套件
+library(parallel)  # 設置平行運算的套件
+library(progress)  # 設置進度條的套件
+library(doSNOW)  # 平行運算的套件
+library(writexl)  # 輸出資料的套件
 
 ###---------------------數據生成與輸出---------------------
 ## 受試者真實能力生成
