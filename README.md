@@ -1,5 +1,5 @@
 # 1. 主題
-CAT模擬研究，複現 Some New Item Selection Criteria for Adaptive Testing , Veerkamp, W.J.J. ,1997，同時增加了新的指標，刪除了過時的指標
+CAT模擬研究，複現 Some New Item Selection Criteria for Adaptive Testing , Veerkamp, W.J.J. ,1997，同時增加了新的指標，並刪除了過時的指標
 
 # 2. 文件介紹
 - ## **CAT模擬研究--平行運算**：完整的模擬研究的代碼
@@ -16,4 +16,11 @@ CAT模擬研究，複現 Some New Item Selection Criteria for Adaptive Testing ,
   - 第二部分-測試用代碼：可以無視，用於測試參數的設置
   - 第三部分-二準則代碼：可以無視，因為MLWI的資料需要跑很久，所以會需要先處理MFI和MFII的資料
   - 第四部份-全準則代碼：主要使用這一部份
-  ### 補充：儘管CAT模擬研究--平行運算中已經有類似的代碼，但因為此研究需要稍長的運算時間(通常需要幾天的時間完成)，所以最好是將輸出的資料單獨提出來處理
+- ## **耗時**：第一部分約3分49秒左右
+  ### **規格**
+  - CPU：i5-14600K(未超頻)(20核,睿頻5.2Hz)
+  - GPU：RTX5060
+  - 記憶體：32G
+  ### <註> 16核 -> 19核 ：僅減少9秒
+  
+  
