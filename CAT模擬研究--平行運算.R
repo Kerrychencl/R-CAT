@@ -60,7 +60,7 @@ write_xlsx(as.data.frame(item_pool), "unif400_item_pool.xlsx")
 
 ###---------------------平行運算前置設定---------------------
 ## 確定可用核心數量(平行計算前置設定)
-num_cores <- detectCores() - 1  # 預留一個核心給系統
+num_cores <- detectCores() - 4  # 預留4個核心給系統
 cl <- makeCluster(num_cores)
 registerDoSNOW(cl)
 
@@ -584,3 +584,4 @@ for (i in 1:7) {
   dev.off()
   }
   
+
