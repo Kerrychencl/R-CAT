@@ -23,6 +23,7 @@ CAT模擬研究，複現 Some New Item Selection Criteria for Adaptive Testing ,
   - 記憶體：32G
   ### **MFI**：3分49秒
   ### **MFII**：1小時42分38秒
+  ### **MLWI**：約28小時30分鐘 (此為31%耗時8小時40分鐘的推算)
   
   
   
